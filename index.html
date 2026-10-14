@@ -24,10 +24,16 @@
   .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:56px 24px 120px;overflow:hidden}
   .bg-pink{position:absolute;top:0;right:0;bottom:0;width:44%;background:var(--pink-soft)}
   .bg-circle{position:absolute;top:72px;right:6%;width:380px;height:380px;border-radius:50%;background:var(--lime)}
-  .band{position:absolute;left:0;right:0;bottom:0;height:60px;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center;gap:18px;padding:0 24px;font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;z-index:2}
+  .band{position:absolute;left:0;right:0;bottom:0;height:60px;background:var(--ink);color:var(--lime);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 24px;font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;z-index:2}
   .band i{font-style:normal;color:var(--pink-text)}
 
-  .wrap{position:relative;z-index:1;width:100%;max-width:1140px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:48px}
+  .wrap{position:relative;z-index:1;width:100%;max-width:1140px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:48px;transform-origin:center center}
+
+  /* 데스크톱: 스크롤 없이 한 화면에 꽉 차게 */
+  @media (min-width: 961px){
+    html,body{height:100%;overflow:hidden}
+    .hero{height:100vh;height:100svh;min-height:0;padding:24px 24px 84px}
+  }
 
   .copy{flex:1 1 460px;min-width:0;max-width:600px;display:flex;flex-direction:column;gap:22px}
   .logo{font-size:112px;line-height:.95;letter-spacing:-2px;color:var(--lime);-webkit-text-stroke:2.5px var(--ink);margin:0}
@@ -173,5 +179,25 @@
     <span>수압</span><i>✦</i><span>온수</span><i>✦</i><span>채광</span><i>✦</i><span>곰팡이·결로</span><i>✦</i><span>방음</span><i>✦</i><span>콘센트</span><i>✦</i><span>휴대폰 신호</span><i>✦</i><span>밤길·CCTV</span><i>✦</i><span>배수</span><i>✦</i><span>관리비</span><i>✦</i><span>현관 보안</span><i>✦</i><span>벌레·냄새</span><i>✦</i><span>동선</span><i>✦</i><span>수납</span>
   </div>
 </main>
+<script>
+  // 데스크톱에서는 화면 높이에 맞춰 콘텐츠를 줄여 스크롤 없이 한 화면에 보이게 합니다.
+  (function () {
+    var hero = document.querySelector('.hero');
+    var wrap = document.querySelector('.wrap');
+    function fit() {
+      wrap.style.transform = '';
+      if (window.innerWidth <= 960) return;
+      var cs = getComputedStyle(hero);
+      var availH = hero.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      var availW = hero.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      var s = Math.min(1, availH / wrap.offsetHeight, availW / wrap.offsetWidth);
+      if (s < 1) wrap.style.transform = 'scale(' + s + ')';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('load', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    fit();
+  })();
+</script>
 </body>
 </html>
